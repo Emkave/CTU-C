@@ -1,0 +1,13 @@
+{
+  "name": "CTU-C",
+  "symbol": "CC",
+  "description": "The unofficial token for Czech Technical University in Prague.",
+  "image": "https://github.com/Emkave/CTU-C/blob/main/ctuc_logo.jpg",
+  "attributes": [
+    { "trait_type": "Category", "value": "Utility" }
+  ],
+  "properties": {
+    "files": [{ "uri": "https://raw.githubusercontent.com/emkave/token-assets/main/logo.png", "type": "image/png" }],
+    "category": "image"
+  }
+}
