@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, MintTo, SetAuthority};
-use spl_token::instruction::AuthorityType;
+use anchor_spl::token::spl_token::instruction::AuthorityType;
 
 declare_id!("11111111111111111111111111111111");
 
@@ -85,6 +85,7 @@ pub mod owner_mint_token {
     }
 }
 
+
 #[derive(Accounts)]
 #[instruction(owner: Pubkey)]
 pub struct Initialize<'info> {
@@ -92,6 +93,7 @@ pub struct Initialize<'info> {
     pub payer: Signer<'info>,
     #[account(mut)]
     pub mint: Account<'info, Mint>,
+    /// CHECK: PDA used only as a signer (no data). Its address is verified by seeds ["authority", mint] and bump.
     #[account(seeds = [b"authority", mint.key().as_ref()], bump)]
     pub mint_authority_pda: UncheckedAccount<'info>,
     pub current_mint_authority: Signer<'info>,
@@ -107,11 +109,13 @@ pub struct Initialize<'info> {
     pub token_program: Program<'info, Token>,
 }
 
+
 #[derive(Accounts)]
 pub struct MintTokens<'info> {
     pub owner: Signer<'info>,
     #[account(mut)]
     pub mint: Account<'info, Mint>,
+    /// CHECK: PDA used only as a signer. Address is constrained by seeds ["authority", mint] and bump = config.bump.
     #[account(seeds = [b"authority", mint.key().as_ref()], bump = config.bump)]
     pub mint_authority_pda: UncheckedAccount<'info>,
     #[account(mut)]
@@ -121,11 +125,13 @@ pub struct MintTokens<'info> {
     pub token_program: Program<'info, Token>,
 }
 
+
 #[derive(Accounts)]
 pub struct DisableMinting<'info> {
     pub owner: Signer<'info>,
     #[account(mut)]
     pub mint: Account<'info, Mint>,
+    /// CHECK: PDA used only as a signer. Address is constrained by seeds ["authority", mint] and bump = config.bump.
     #[account(seeds = [b"authority", mint.key().as_ref()], bump = config.bump)]
     pub mint_authority_pda: UncheckedAccount<'info>,
     #[account(seeds = [b"config", mint.key().as_ref()], bump)]
@@ -133,12 +139,14 @@ pub struct DisableMinting<'info> {
     pub token_program: Program<'info, Token>,
 }
 
+
 #[account]
 pub struct MintConfig {
     pub owner: Pubkey,
     pub mint: Pubkey,
     pub bump: u8,
 }
+
 
 #[error_code]
 pub enum CustomError {
